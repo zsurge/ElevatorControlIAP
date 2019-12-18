@@ -1,0 +1,6 @@
+#忽略BIN下所有文件
+/7Bin/*
+
+#忽略SI目录
+/ElevatorControlIAP.si4project/*
+
