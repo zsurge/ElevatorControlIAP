@@ -23,6 +23,7 @@
 #include "tool.h"
 #include "stdarg.h"
 #include "stdio.h"
+#include <string.h>
 
 
 /*----------------------------------------------*
@@ -393,5 +394,38 @@ char *strstr_t(const char *str, const char *sub_str)
 
  
 
+
+void calcMac(unsigned char *mac)
+{
+    uint16_t crc_value = 0;
+    unsigned int chipid[3] = { 0 };   
+    unsigned char buf[6] = {0x02,0x00,0x00,0x00,0x00,0x00};  
+    unsigned char id[30] = {0};    
+    
+    unsigned char id1[10] = { 0 };
+    unsigned char id2[10] = { 0 };
+    unsigned char id3[10] = { 0 };  
+    
+    chipid[0] = *(volatile uint32_t *)(0x1FFF7A10 + 0x00);
+    chipid[1] = *(volatile uint32_t *)(0x1FFF7A10 + 0x04);
+    chipid[2] = *(volatile uint32_t *)(0x1FFF7A10 + 0x08); 
+
+    sprintf(id1,"%d",chipid[0]);
+    sprintf(id2,"%d",chipid[1]);
+    sprintf(id3,"%d",chipid[2]);
+
+    strcpy((char *)id,(char *)id1);
+    strcat((char *)id,(char *)id2);
+    strcat((char *)id,(char *)id3);    
+    
+    crc_value = CRC16_Modbus(id, strlen((const char*)id));
+
+    buf[3] =  crc_value & 0xff;
+    buf[4] =  crc_value>>8;
+    buf[5] =  chipid[0]&0xff;
+
+    memcpy(mac,buf,6);
+
+}
 
 

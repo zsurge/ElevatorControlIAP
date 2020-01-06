@@ -57,6 +57,9 @@ int main(void)
 
     log_d("lwip init success!\r\n");
 
+//    ef_set_env("WMCUFLASH",W_MCU_FLASH_OK);
+//    ef_set_env("WSPIFLASH",W_SPI_FLASH_OK);
+
 
 	//创建开始任务
 //    xTaskCreate((TaskFunction_t )vTaskUpdate,            //任务函数

@@ -26,7 +26,6 @@
 #include <stdint.h>
 
 
-
 /*----------------------------------------------*
  * ∫Í∂®“Â                                       *
  *----------------------------------------------*/
@@ -75,5 +74,6 @@ char *strstr_t(const char *str, const char *sub_str);
 
 
 
+void calcMac(unsigned char *mac);
 
 #endif
