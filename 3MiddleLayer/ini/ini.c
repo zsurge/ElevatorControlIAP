@@ -43,7 +43,7 @@ void ReadIAP(void)
     sfud_err result = SFUD_SUCCESS;
     const sfud_flash *flash = sfud_get_device_table() + 0;
     size_t i;
-    uint32_t addr = 0x10000;
+    uint32_t addr = 0x300000;
     size_t size = SFUD_DEMO_TEST_BUFFER_SIZE;
     size_t j = 0;
 

@@ -80,7 +80,7 @@
 #define EF_START_ADDR             (0)/* @note you must define it for a value */
 
 /* ENV area size. It's at least one empty sector for GC. So it's definition must more then or equal 2 flash sector size. */
-#define ENV_AREA_SIZE             (4*16*16 * EF_ERASE_MIN_SIZE)      /* 1024K */ /* @note you must define it for a value if you used ENV */
+#define ENV_AREA_SIZE             (16*16 * EF_ERASE_MIN_SIZE)      /* 1024K */ /* @note you must define it for a value if you used ENV */
 
 /* saved log area size */
 #define LOG_AREA_SIZE              (10 * EF_ERASE_MIN_SIZE)    /* 40K *//* @note you must define it for a value if you used log */

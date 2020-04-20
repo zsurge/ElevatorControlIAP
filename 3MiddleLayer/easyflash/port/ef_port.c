@@ -27,7 +27,7 @@
  */
 
 #include <easyflash.h>
-#include "bsp_flash.h"
+
 #include "stdarg.h"
 #include "stdio.h"
 #include <sfud.h>
@@ -37,14 +37,13 @@
  
 static const ef_env default_env_set[] = 
 {
-   {"boot_times","0001"},
-   {"WSPIFLASH","5555"},
-   {"WMCUFLASH","6666"},    
-   {"ICSTATE","01"},
-   {"QRSTATE","01"},
-   {"LIGHTMODE","01"},
-   {"SCANMODE","01"},
-   {"TIMEINTERVAL","03"}
+    {"boot_times","0001"},
+    {"WSPIFLASH","5555"},
+    {"WMCUFLASH","6666"},    
+    {"up_status","000000"},
+    {"remote_sn","000000"},
+    {"sn_flag","0000"},
+    {"DeviceState","0001"},
 };
 
 

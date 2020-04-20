@@ -41,7 +41,6 @@
  * 宏定义                                       *
  *----------------------------------------------*/
 #define READ_BIN_BUFFER_SIZE 2048
-#define MCU_FLASH_START_ADDR 0x10000
 
 #define CONNECT_OK       1
 #define DIS_CONNECT     -1
@@ -121,7 +120,7 @@ uint8_t IAP_JumpToApplication(void)
     }
 }
 
-//通过串口接收文件并写入外部FLASH
+//接收文件并写入外部FLASH
 int32_t IAP_DownLoadToFlash(void)
 {
     uint8_t upsteps = HTTP_CONNECT;     //消息状态初始化
@@ -292,7 +291,7 @@ int32_t IAP_DownLoadToSTMFlash(int32_t filesize)
 	int32_t sent=0;
 	int32_t rest=filesize;
     uint8_t read_buf[READ_BIN_BUFFER_SIZE];
-    uint32_t flash_addr = MCU_FLASH_START_ADDR;
+    uint32_t flash_addr = ef_get_bak_app_start_addr();
     uint32_t  user_app_addr,ramsource;
     size_t DATAS_LENGTH = READ_BIN_BUFFER_SIZE;
     sfud_err result = SFUD_SUCCESS;

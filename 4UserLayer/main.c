@@ -112,6 +112,13 @@ void vTaskMqttTest(void *pvParameters)
     int8_t spi_flash_flag = 0;
     int8_t mcu_flash_flag = 0;  
 
+    char spi_flag[4+1] = {0};
+    char mcu_flag[4+1] = {0};    
+
+    int8_t spi_flag_len = 0;
+    int8_t mcu_flag_len = 0;  
+
+
     while(1)
         {   
 
@@ -119,13 +126,16 @@ void vTaskMqttTest(void *pvParameters)
 //            ef_print_env();
     
             //读取升级标志位
-            spi_flash_value = ef_get_env("WSPIFLASH");
-            spi_flash_flag = strcmp(W_SPI_FLASH_OK, spi_flash_value);
+            spi_flag_len = ef_get_env_blob("WSPIFLASH", spi_flag, sizeof(spi_flag) , NULL);
+            mcu_flag_len = ef_get_env_blob("WMCUFLASH", mcu_flag, sizeof(mcu_flag) , NULL);
+
+            log_d("%s,%s,%d,%d\r\n",spi_flag,mcu_flag,spi_flag_len,mcu_flag_len);            
+
+            spi_flash_flag = strcmp(W_SPI_FLASH_OK, spi_flag);
 
             log_d("spi_flash_flag = %d\r\n",spi_flash_flag);
     
-            mcu_flash_value = ef_get_env("WMCUFLASH"); 
-            mcu_flash_flag = strcmp(W_MCU_FLASH_OK, mcu_flash_value); 
+            mcu_flash_flag = strcmp(W_MCU_FLASH_OK, mcu_flag); 
             
             log_d("mcu_flash_flag = %d\r\n",mcu_flash_flag);
             
@@ -138,6 +148,8 @@ void vTaskMqttTest(void *pvParameters)
                 if(IAP_JumpToApplication())
                 {
                     printf("iap jump error,please download app\r\n");
+
+//                    ReadIAP();
     
                     //跳转失败，所有要重置所有标志位，升级写SPI FLASH和MCU FLASH
                     ef_set_env("WSPIFLASH", W_SPI_FLASH_NEED);

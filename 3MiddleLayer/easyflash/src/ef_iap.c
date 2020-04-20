@@ -33,7 +33,7 @@
 #ifdef EF_USING_IAP
 
 /* IAP section backup application section start address in flash */
-static uint32_t bak_app_start_addr = 0x10000;//从第64开始
+static uint32_t bak_app_start_addr = 0x300000;//从第3M开始
 
 /**
  * Flash IAP function initialize.
@@ -287,7 +287,11 @@ EfErrCode ef_copy_bl_from_bak(uint32_t bl_addr, size_t bl_size) {
  * @return size
  */
 uint32_t ef_get_bak_app_start_addr(void) {
+
+    EF_INFO("bak_app_start_addr = %x\r\n",bak_app_start_addr);
+
     return bak_app_start_addr;
+
 }
 
 #endif /* EF_USING_IAP */
