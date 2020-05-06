@@ -20,13 +20,8 @@
 
 /* 被系统调用 */
 
-
-extern volatile uint32_t g1msTimerUART1;
-extern volatile uint32_t g1msTimerUART2;
-extern volatile uint32_t g1msTimerUART3;
-extern volatile uint32_t g1msTimerUART4;
-extern volatile uint32_t g1msTimerUART5;
-extern volatile uint32_t g1msTimerUART;
+extern volatile uint32_t g500usTimerUART;
+extern volatile uint32_t g500usTimerRS485;
 
 
 

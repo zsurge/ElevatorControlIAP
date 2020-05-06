@@ -530,23 +530,9 @@ void RS485_InitTXE(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 
     #if UART1_RS485_EN == 1
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);	/* 打开GPIO时钟 */
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;		/* 设为输出口 */
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		/* 设为推挽 */
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;	/* 无上拉电阻 */
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	/* IO口最大速度 */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
-	GPIO_Init(GPIOE, &GPIO_InitStructure);     
     #endif
 
     #if UART2_RS485_EN == 1
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);	/* 打开GPIO时钟 */
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;		/* 设为输出口 */
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;		/* 设为推挽 */
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;	/* 无上拉电阻 */
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	/* IO口最大速度 */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-	GPIO_Init(GPIOE, &GPIO_InitStructure); 
     #endif
 
     #if UART3_RS485_EN == 1
@@ -719,6 +705,42 @@ uint8_t RS485_Recv(COM_PORT_E _ucPort,uint8_t *buf, uint8_t len)
     }
 
     return len;                   //返回实际读取长度
+}
+
+
+uint8_t RS485_RecvAtTime(COM_PORT_E _ucPort,uint8_t *buf, uint8_t len,uint32_t timeout)
+{
+    //uint8_t i = 0;   
+    uint8_t recvSize = len;
+    uint8_t recvLen = 0;
+    //uint8_t tmp[1] = {0};
+    UART_T *pUart;
+	pUart = ComToUart(_ucPort);
+    
+	if (pUart == 0)
+	{
+		return 0;
+	}
+    
+    if(recvSize > pUart->usRxCount)  //指定读取长度大于实际接收到的数据长度时
+    {
+        recvSize=pUart->usRxCount; //读取长度设置为实际接收到的数据长度
+    }  
+
+
+	g500usTimerRS485 = timeout;
+
+	while (1)
+	{
+		if (g500usTimerRS485 == 0) return recvLen;
+
+
+        UartGetChar(pUart,buf + recvLen);
+        recvLen++;
+
+		if (recvLen >= recvSize) return recvSize;
+	}  
+
 }
 
 
@@ -1455,11 +1477,11 @@ uint16_t comGetBuff(COM_PORT_E _ucPort,uint8_t *Buff, uint16_t RecvSize,uint16_t
 
 	if (RecvSize == 0) return 0;
 
-	g1msTimerUART = timeout_MilliSeconds;
+	g500usTimerUART = timeout_MilliSeconds;
 
 	while (1)
 	{
-		if (g1msTimerUART == 0) return RecvLen;
+		if (g500usTimerUART == 0) return RecvLen;
 
 		if (comGetChar (_ucPort,tmp) == 1) 
 		{

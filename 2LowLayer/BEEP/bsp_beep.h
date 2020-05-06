@@ -6,16 +6,24 @@
 
 //LED端口定义
 
-#define RCC_ALL_BEEP     (RCC_AHB1Periph_GPIOF)
+//#define RCC_ALL_BEEP     (RCC_AHB1Periph_GPIOF)
 
-#define GPIO_PORT_BEEP    GPIOF
-#define GPIO_PIN_BEEP    GPIO_Pin_6
+//#define GPIO_PORT_BEEP    GPIOF
+//#define GPIO_PIN_BEEP    GPIO_Pin_8
+
+
+#define RCC_ALL_BEEP     (RCC_AHB1Periph_GPIOG)
+
+#define GPIO_PORT_BEEP    GPIOG
+#define GPIO_PIN_BEEP    GPIO_Pin_15
+
 
 
 
 
 //LED端口定义
-#define BEEP PFout(6)	// 蜂鸣器控制IO 
+//#define BEEP PFout(8)	// 蜂鸣器控制IO 
+#define BEEP PGout(15)	// 蜂鸣器控制IO 
 
 
 void bsp_beep_init(void);//初始化		 		

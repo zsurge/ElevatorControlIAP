@@ -51,6 +51,7 @@
 #define LWIP_STATS 0
 #define LWIP_PROVIDE_ERRNO 1
 
+#define LWIP_NETIF_LINK_CALLBACK        1
 
 //帧校验和选项，STM32F4x7允许通过硬件识别和计算IP,UDP和ICMP的帧校验和
 #define CHECKSUM_BY_HARDWARE //定义CHECKSUM_BY_HARDWARE,使用硬件帧校验
@@ -90,8 +91,8 @@
 #define LWIP_SO_RCVTIMEO                1 	//通过定义LWIP_SO_RCVTIMEO使能netconn结构体中recv_timeout,使用recv_timeout可以避免阻塞线程
 
 //有关系统的选项
-#define TCPIP_THREAD_STACKSIZE          1000	//内核任务堆栈大小
-#define DEFAULT_UDP_RECVMBOX_SIZE       2000
+#define TCPIP_THREAD_STACKSIZE          1024	//内核任务堆栈大小
+#define DEFAULT_UDP_RECVMBOX_SIZE       1024
 #define DEFAULT_THREAD_STACKSIZE        512
 
 //LWIP调试选项

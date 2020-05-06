@@ -2,31 +2,21 @@
 #include "stm32f4x7_eth.h"
 #include "delay.h"
 #include "malloc.h" 
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//LAN8720 驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/8/15
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 
+
 
 ETH_DMADESCTypeDef *DMARxDscrTab;	//以太网DMA接收描述符数据结构体指针
 ETH_DMADESCTypeDef *DMATxDscrTab;	//以太网DMA发送描述符数据结构体指针 
 uint8_t *Rx_Buff; 					//以太网底层驱动接收buffers指针 
 uint8_t *Tx_Buff; 					//以太网底层驱动发送buffers指针
-  
+
+
 static void ETHERNET_NVICConfiguration(void);
-//LAN8720初始化
-//返回值:0,成功;
-//    其他,失败
-u8 LAN8720_Init(void)
+static void ETH_GPIO_Config(void);
+
+
+
+static void ETH_GPIO_Config(void)
 {
-	u8 rval=0;
 	GPIO_InitTypeDef GPIO_InitStructure;
   
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA|RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOG|RCC_AHB1Periph_GPIOD, ENABLE);//使能GPIO时钟 RMII接口
@@ -83,8 +73,28 @@ u8 LAN8720_Init(void)
 	LAN8720_RST=0;					//硬件复位LAN8720
 	delay_ms(50);	
 	LAN8720_RST=1;				 	//复位结束 
-	ETHERNET_NVICConfiguration();	//设置中断优先级
-	rval=ETH_MACDMA_Config();		//配置MAC及DMA
+}
+
+
+//LAN8720初始化
+//返回值:0,成功;
+//    其他,失败
+u8 LAN8720_Init(void)
+{
+	u8 rval=0;
+
+	//配置GPIO    
+    ETH_GPIO_Config();
+    
+    //设置中断优先级
+	ETHERNET_NVICConfiguration();	
+
+	//配置MAC及DMA  
+	rval=ETH_MACDMA_Config();		
+
+	//获取上电时的连接状态
+	SetGB_LinkState(GetPHYLinkState());
+    
 	return !rval;					//ETH的规则为:0,失败;1,成功;所以要取反一下 
 }
 
@@ -161,6 +171,7 @@ u8 ETH_MACDMA_Config(void)
 	ETH_InitStructure.ETH_TxDMABurstLength = ETH_TxDMABurstLength_32Beat;			//DMA接收的最大突发长度为32个节拍
 	ETH_InitStructure.ETH_DMAArbitration = ETH_DMAArbitration_RoundRobin_RxTx_2_1;
 	rval=ETH_Init(&ETH_InitStructure,LAN8720_PHY_ADDRESS);		//配置ETH
+	
 	if(rval==ETH_SUCCESS)//配置成功
 	{
 		ETH_DMAITConfig(ETH_DMA_IT_NIS|ETH_DMA_IT_R,ENABLE);  	//使能以太网接收中断	
@@ -269,9 +280,19 @@ void ETH_Mem_Free(void)
 
 
 
-
-
-
+LinkState_TypeDef GetPHYLinkState(void)
+{
+	unsigned char tempdata = 0;
+	
+	/*读取寄存器1 --> Basic status register*/
+	tempdata = ETH_ReadPHYRegister(LAN8720_PHY_ADDRESS, 1);
+	
+	/*读取连接状态位*/
+	tempdata &= 0x04;
+	tempdata >>= 2;
+	
+	return tempdata;
+}
 
 
 

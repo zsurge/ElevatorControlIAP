@@ -1,6 +1,7 @@
 #include "def.h"
 #include "mqtt_app.h"
 #include "client.h"
+#include "pub_options.h"
 
 #define LOG_TAG    "main"
 #include "elog.h"
@@ -24,9 +25,7 @@
 
 
 //任务句柄
-static TaskHandle_t xHandleTaskUpdate = NULL;
-static TaskHandle_t xHandleTaskMqtt = NULL;      //MQTT 测试
-static TaskHandle_t xHandleTaskLed = NULL;      //LED灯
+TaskHandle_t xHandleTaskMqtt = NULL;      //MQTT 测试
 
 
 //任务函数
@@ -39,37 +38,10 @@ static void AppTaskCreate(void);
 
 int main(void)
 { 
-
-	bsp_Init();    
-
-
+	bsp_Init();  
     EasyLogInit();  
-    
-	mymem_init(SRAMIN);								//初始化内部内存池
-	mymem_init(SRAMEX);								//初始化外部内存池
-	mymem_init(SRAMCCM);	  					    //初始化CCM内存池
 
-	while(lwip_comm_init() != 0) //lwip初始化
-	{
-        log_d("lwip init error!\r\n");
-		delay_ms(1200);
-	}
-
-    log_d("lwip init success!\r\n");
-
-//    ef_set_env("WMCUFLASH",W_MCU_FLASH_OK);
-//    ef_set_env("WSPIFLASH",W_SPI_FLASH_OK);
-
-
-	//创建开始任务
-//    xTaskCreate((TaskFunction_t )vTaskUpdate,            //任务函数
-//                (const char*    )"update",               //任务名称
-//                (uint16_t       )UPDATE_STK_SIZE,        //任务堆栈大小
-//                (void*          )NULL,                  //传递给任务函数的参数
-//                (UBaseType_t    )UPDATE_TASK_PRIO,        //任务优先级
-//                (TaskHandle_t*  )&xHandleTaskUpdate);   //任务句柄        
-
-
+//    ef_env_set_default();
 
 	/* 创建任务 */
 	AppTaskCreate();
@@ -81,15 +53,7 @@ int main(void)
 static void AppTaskCreate (void)
 {
 
-#if LWIP_DHCP
-                lwip_comm_dhcp_creat();                             //创建DHCP任务
-#endif
-
-
-
-//    client_init();
-
-
+    StartEthernet();  
 
     xTaskCreate((TaskFunction_t )vTaskMqttTest,     
                 (const char*    )"vMqttTest",   
@@ -124,6 +88,7 @@ void vTaskMqttTest(void *pvParameters)
 
             //打印下参数，DEBUG时使用，RELEASE里需删除
 //            ef_print_env();
+            ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
     
             //读取升级标志位
             spi_flag_len = ef_get_env_blob("WSPIFLASH", spi_flag, sizeof(spi_flag) , NULL);

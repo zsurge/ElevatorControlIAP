@@ -63,7 +63,8 @@ void bsp_InitIwdg(uint32_t _ulIWDGTime)
 	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
 	
 	/*  LSI/32 分频*/
-	IWDG_SetPrescaler(IWDG_Prescaler_32);
+	//IWDG_SetPrescaler(IWDG_Prescaler_32);
+	IWDG_SetPrescaler(IWDG_Prescaler_128);
 	
 	/*特别注意，由于这里_ulIWDGTime的最小单位是ms, 所以这里重装计数的
 	  计数时 需要除以1000

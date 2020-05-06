@@ -63,7 +63,7 @@
 #define configCPU_CLOCK_HZ				( SystemCoreClock ) 		//CPU频率
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 ) 		//时钟节拍频率，这里设置为1000，周期就是1ms
 #define configMAX_PRIORITIES			( 10 )		//可使用的最大优先级
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 130 )		//空闲任务使用的堆栈大小
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )		//空闲任务使用的堆栈大小
 #define configMAX_TASK_NAME_LEN			( 10 )	//任务名字字符串长度
 
 #define configUSE_16_BIT_TICKS			0		//系统节拍计数器变量数据类型，1表示为16位无符号整形，0表示为32位无符号整形
@@ -81,7 +81,7 @@
 /*                                FreeRTOS与内存申请有关配置选项                                                */
 /***************************************************************************************************************/
 #define configSUPPORT_DYNAMIC_ALLOCATION        1                       //支持动态内存申请 V9.0
-#define configTOTAL_HEAP_SIZE					((size_t)(40*1024))     //系统所有总的堆大小
+#define configTOTAL_HEAP_SIZE					((size_t)(42*1024))     //系统所有总的堆大小
 
 /***************************************************************************************************************/
 /*                                FreeRTOS与钩子函数有关的配置选项                                              */

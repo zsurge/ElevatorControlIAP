@@ -29,8 +29,8 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
-#ifndef __ARCH_SYS_ARCH_H__
-#define __ARCH_SYS_ARCH_H__ 
+#ifndef __SYS_RTXC_H__
+#define __SYS_RTXC_H__
 
 #include "arch/cc.h"
 #include "FreeRTOS.h"

@@ -20,9 +20,9 @@ void bsp_beep_init(void)
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;//下拉
     GPIO_Init(GPIO_PORT_BEEP, &GPIO_InitStructure);//初始化GPIO
       
-    GPIO_ResetBits(GPIO_PORT_BEEP,GPIO_PIN_BEEP);  //蜂鸣器对应引脚GPIOF6拉低， 
+//    GPIO_ResetBits(GPIO_PORT_BEEP,GPIO_PIN_BEEP);  //蜂鸣器对应引脚GPIOF6拉低
 
-
+    BEEP=1;
 }
 
 

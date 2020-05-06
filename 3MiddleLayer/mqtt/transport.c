@@ -23,6 +23,8 @@
 ** 生成日期		:2018-08-08
 ** 描述			:mqtt通信接口文件，串口移植请修改此文件
 ************************************************************************************************************/
+#define LOG_TAG    "TRANSPORT"
+#include "elog.h"
 
 //#include <sys/types.h>
 
@@ -106,7 +108,7 @@ On other scenarios, the user must solve this by taking into account that the cur
 MQTTPacket_read() has a function pointer for a function call to get the data to a buffer, but no provisions
 to know the caller or other indicator (the socket id): int (*getfn)(unsigned char*, int)
 */
-static int mysock = INVALID_SOCKET;
+static int my_sock = INVALID_SOCKET;
 
 
 int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen)
@@ -119,7 +121,7 @@ int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen)
 
 int transport_getdata(unsigned char* buf, int count)
 {
-	int rc = recv(mysock, buf, count, 0);
+	int rc = recv(my_sock, buf, count, 0);
 	//printf("received %d bytes count %d\n", rc, (int)count);
 	return rc;
 }
@@ -222,31 +224,29 @@ removing indirections
 //	#endif
 //		}
 //	}
-//	if (mysock == INVALID_SOCKET)
+//	if (my_sock == INVALID_SOCKET)
 //		return rc;
 
 //	tv.tv_sec = 1;  /* 1 second Timeout */
 //	tv.tv_usec = 0;  
-//	setsockopt(mysock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-//	return mysock;
+//	setsockopt(my_sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+//	return my_sock;
 //}
 
 int transport_open(char* addr, int port)
 {
-	int* sock = &mysock;
+	int* sock = &my_sock;
 	struct hostent *server;
 	struct sockaddr_in serv_addr;
-	static struct  timeval tv;
 	int timeout = 1000;
-	fd_set readset;
-	fd_set writeset;
+
 	*sock = socket(AF_INET, SOCK_STREAM, 0);
 	if(*sock < 0)
-		printf("[ERROR] Create socket failed\n");
+		log_d("[ERROR] Create socket failed\r\n");
 	
 	server = gethostbyname(addr);
 	if(server == NULL)
-		printf("[ERROR] Get host ip failed\n");
+		log_d("[ERROR] Get host ip failed\r\n");
 	
 	memset(&serv_addr,0,sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
@@ -254,17 +254,15 @@ int transport_open(char* addr, int port)
 	memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
 	if(connect(*sock,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
 	{
-		printf("[ERROR] connect failed\n");
+		//关闭链接
+		close(*sock);        
+		log_d("[ERROR] connect failed\r\n");
         return -1;
 	}
 
-    printf("connect server\n");
+	setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout,sizeof(timeout));
     
-	tv.tv_sec = 10;  /* 1 second Timeout */
-	tv.tv_usec = 0; 
-	setsockopt(mysock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout,sizeof(timeout));
-
-    return mysock;
+    return *sock;
 }
 
 int transport_close(int sock)

@@ -116,9 +116,9 @@ void bsp_spi_flash_init(void)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 
     /* 配置 SCK, MISO 、 MOSI 为复用功能 */
-    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_SCK_PINSource,  GPIO_AF_SPI1);
-    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_MISO_PINSource, GPIO_AF_SPI1);
-    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_MOSI_PINSource, GPIO_AF_SPI1);
+    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_SCK_PINSource,  GPIO_AF_SPI2);
+    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_MISO_PINSource, GPIO_AF_SPI2);
+    GPIO_PinAFConfig(SPI_FLASH_PORT, FLASH_MOSI_PINSource, GPIO_AF_SPI2);
 
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -457,6 +457,9 @@ void bsp_sf_PageWrite(uint8_t * _pBuf, uint32_t _uiWriteAddr, uint16_t _usSize)
         uint32_t uiFirstAddr;       /* 扇区首址 */
         uint8_t ucNeedErase;        /* 1表示需要擦除 */
         uint8_t cRet;
+
+//        uint8_t s_spiBuf[4*1024] = {0}; 
+
     
         /* 长度为0时不继续操作,直接认为成功 */
         if (_usWrLen == 0)
@@ -558,10 +561,17 @@ void bsp_sf_PageWrite(uint8_t * _pBuf, uint32_t _uiWriteAddr, uint16_t _usSize)
     uint8_t bsp_sf_WriteBuffer(uint8_t* _pBuf, uint32_t _uiWriteAddr, uint16_t _usWriteSize)
     {
         uint16_t NumOfPage = 0, NumOfSingle = 0, Addr = 0, count = 0, temp = 0;
-    
+
+        /*mod运算求余，若writeAddr是SPI_FLASH_PageSize整数倍，运算结果Addr值为0*/
         Addr = _uiWriteAddr % g_tSF.PageSize;
+        
+        /*差count个数据值，刚好可以对齐到页地址*/
         count = g_tSF.PageSize - Addr;
+
+        /*计算出要写多少整数页*/
         NumOfPage =  _usWriteSize / g_tSF.PageSize;
+
+        /*mod运算求余，计算出剩余不满一页的字节数*/
         NumOfSingle = _usWriteSize % g_tSF.PageSize;
     
         if (Addr == 0) /* 起始地址是页面首地址  */

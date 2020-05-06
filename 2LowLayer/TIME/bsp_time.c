@@ -26,26 +26,14 @@
 
 volatile uint32_t ulHighFrequencyTimerTicks = 0UL;
 
-volatile uint32_t g1msTimerUART = 0;
-volatile uint32_t g1msTimerUART1 = 0;
-volatile uint32_t g1msTimerUART2 = 0;
-volatile uint32_t g1msTimerUART3 = 0;
-volatile uint32_t g1msTimerUART4 = 0;
-volatile uint32_t g1msTimerUART5 = 0;
-
-
-
-
+volatile uint32_t g500usTimerUART = 0;
+volatile uint32_t g500usTimerRS485 = 0;
 
 
 void bsp_TimeSysTickHandler (void)
 {
-    if (g1msTimerUART  > 0) g1msTimerUART--;    
-	if (g1msTimerUART1 > 0) g1msTimerUART1--;
-    if (g1msTimerUART2 > 0) g1msTimerUART2--;
-    if (g1msTimerUART3 > 0) g1msTimerUART3--;
-    if (g1msTimerUART4 > 0) g1msTimerUART4--;
-    if (g1msTimerUART5 > 0) g1msTimerUART5--;
+    if (g500usTimerUART  > 0) g500usTimerUART--;    
+    if (g500usTimerRS485  > 0) g500usTimerRS485--; 
 }
 
 void bsp_TIM6_Init(void)

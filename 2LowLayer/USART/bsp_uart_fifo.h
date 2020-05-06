@@ -40,7 +40,7 @@
 /* 定义使能的串口, 0 表示不使能（不增加代码大小）， 1表示使能 */
 #define	UART1_FIFO_EN	0
 #define	UART2_FIFO_EN	1
-#define	UART3_FIFO_EN	1
+#define	UART3_FIFO_EN	0
 #define	UART4_FIFO_EN	0
 #define	UART5_FIFO_EN	0
 #define	UART6_FIFO_EN	0
@@ -161,6 +161,7 @@ void RS485_SendStr(COM_PORT_E _ucPort,char *_pBuf);
 void RS485_SetBaud(COM_PORT_E _ucPort,uint32_t _baud);
 
 uint8_t RS485_Recv(COM_PORT_E _ucPort,uint8_t *buf, uint8_t len);
+uint8_t RS485_RecvAtTime(COM_PORT_E _ucPort,uint8_t *buf, uint8_t len,uint32_t timeout);
 
 
 
