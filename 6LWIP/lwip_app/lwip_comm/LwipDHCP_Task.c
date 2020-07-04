@@ -103,13 +103,13 @@ static void vLwipDHCPTask( void *pvParameters )
 //	uint8_t lwipdevgateway[4] = {0};
 
 
-    printf("start vLwipDHCPTask\r\n");
+//    printf("start vLwipDHCPTask\r\n");
 	while(1)
 	{
 		switch (GetGB_DHCPState())
 		{
 			case DHCP_START:
-                printf("dhcp statr\r\n");;
+//                printf("dhcp statr\r\n");;
 				{
 					IPaddress = 0;
 					
@@ -120,7 +120,7 @@ static void vLwipDHCPTask( void *pvParameters )
 				break;
 
 			case DHCP_WAIT_ADDRESS:
-                printf("DHCP_WAIT_ADDRESS\r\n");
+//                printf("DHCP_WAIT_ADDRESS\r\n");
 				{
 					/* Read the new IP address */
 					IPaddress = tempnetif->ip_addr.addr;
@@ -129,7 +129,7 @@ static void vLwipDHCPTask( void *pvParameters )
 					{
 						SetGB_DHCPState(DHCP_ADDRESS_ASSIGNED);		
 
-                        printf("DHCP_ADDRESS_ASSIGNED\r\n");
+//                        printf("DHCP_ADDRESS_ASSIGNED\r\n");
 
                         ip=tempnetif->ip_addr.addr;		//读取新IP地址
                 		nk=tempnetif->netmask.addr;//读取子网掩码

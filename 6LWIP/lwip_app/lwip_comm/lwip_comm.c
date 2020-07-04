@@ -121,21 +121,21 @@ u8 lwip_comm_init ( void )
 	{
 		return 1;    //内存申请失败
 	}
-	printf ( "ETH_Mem_Malloc\r\n" );
+//	printf ( "ETH_Mem_Malloc\r\n" );
 
 	if ( lwip_comm_mem_malloc() )
 	{
 		return 2;    //内存申请失败
 	}
-	printf ( "lwip_comm_mem_malloc\r\n" );
+//	printf ( "lwip_comm_mem_malloc\r\n" );
 
 	lwip_comm_default_ip_set ( &lwipdev );	//设置默认IP等信息
-	printf ( "lwip_comm_default_ip_set\r\n" );
+//	printf ( "lwip_comm_default_ip_set\r\n" );
 
     LAN8720_Init();
     
 	tcpip_init ( NULL,NULL );				//初始化tcp ip内核,该函数里面会创建tcpip_thread内核任务
-	printf ( "tcpip_init\r\n" );
+//	printf ( "tcpip_init\r\n" );
 
 #if LWIP_DHCP		//使用动态IP
 	ipaddr.addr = 0;

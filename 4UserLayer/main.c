@@ -107,12 +107,12 @@ void vTaskMqttTest(void *pvParameters)
             //正常跳转
             if((spi_flash_flag == 0) && (mcu_flash_flag == 0))
             {
-                log_d("jump app \r\n");
+                log_e("jump app \r\n");
                 
                 //不需要升级，进入APP
                 if(IAP_JumpToApplication())
                 {
-                    printf("iap jump error,please download app\r\n");
+                    log_e("iap jump error,please download app\r\n");
 
 //                    ReadIAP();
     
@@ -129,7 +129,7 @@ void vTaskMqttTest(void *pvParameters)
                 //判断SPI FLASH是否已写完，MCU FLASH未写完，读FLASH，写MCU FLASH
                 if(spi_flash_flag == 0) //程序已存在flash内部，但是未写到mcu
                 {
-                    printf("IAP STATR! ---> Write MCU FLASH\r\n");
+                    log_e("IAP STATR! ---> Write MCU FLASH\r\n");
                     //获取文件大小
                     file_size = ef_get_env((const char * )"FileSize");
                     file_total_size = str2int((const char *)file_size);
@@ -139,7 +139,7 @@ void vTaskMqttTest(void *pvParameters)
                         //写入MCU FLASH 完成标志位
                         if(ef_set_env("WMCUFLASH",W_MCU_FLASH_OK) == EF_NO_ERR)
                         {
-                            printf("STM_FLASH_Write success\r\n");
+                            log_e("STM_FLASH_Write success\r\n");
                         } 
                     }
                 }
@@ -154,7 +154,7 @@ void vTaskMqttTest(void *pvParameters)
                     {
                         if(ef_set_env("WSPIFLASH",W_SPI_FLASH_OK) == EF_NO_ERR)
                         {
-                           log_d("IAP_DownLoadToSTMFlash success!\r\n");
+                           log_e("IAP_DownLoadToSTMFlash success!\r\n");
                         } 
                                                     
                         log_d("write stm flash\r\n");
@@ -164,16 +164,16 @@ void vTaskMqttTest(void *pvParameters)
                             //写入MCU FLASH 完成标志位
                             if(ef_set_env("WMCUFLASH",W_MCU_FLASH_OK) == EF_NO_ERR)
                             {
-                                log_d("STM_FLASH_Write success\r\n");
+                                log_e("STM_FLASH_Write success\r\n");
 
                                 ef_set_env("up_status", "101711");
 
-//                                NVIC_SystemReset();
+                                NVIC_SystemReset();
                             }  
                         }
                         else
                         {
-                            log_d("IAP_DownLoadToSTMFlash error!\r\n");
+                            log_e("IAP_DownLoadToSTMFlash error!\r\n");
                             ef_set_env("WMCUFLASH", W_MCU_FLASH_NEED);                        
                         }
                     }

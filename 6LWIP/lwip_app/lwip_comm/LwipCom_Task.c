@@ -55,7 +55,7 @@ void ChangeNetifLinkStatues(void *pvParameters)
 
 static void vLwipComTask( void *pvParameters )
 {
-    printf("start vLwipComTask\r\n");
+//    printf("start vLwipComTask\r\n");
 	while(1)
 	{
 		ChangeNetifLinkStatues(pvParameters);

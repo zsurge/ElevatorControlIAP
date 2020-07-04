@@ -262,7 +262,7 @@ int32_t IAP_DownLoadToFlash(void)
                             break;                            
             //
             case HTTP_CLOSE:
-                            log_d("send = %d,ContentLength= %d,count = %d\r\n",send,ContentLength,gBinQueue.Count);
+                            log_e("send = %d,ContentLength= %d,count = %d\r\n",send,ContentLength,gBinQueue.Count);
                             log_d("--------HTTP_CLOSE--------\r\n");
                             closesocket ( sock );
                                              
@@ -385,7 +385,7 @@ int getFileBegin(char* src, char* pcBuf)
 	int tmplen = strlen(pcBuf);	
 
 	pcBegin = strstr(src, pcBuf);
-	printf("pcbegin = %s\r\n", pcBegin);
+//	printf("pcbegin = %s\r\n", pcBegin);
 
 	if (pcBegin == NULL)
 	{

@@ -288,7 +288,7 @@ EfErrCode ef_copy_bl_from_bak(uint32_t bl_addr, size_t bl_size) {
  */
 uint32_t ef_get_bak_app_start_addr(void) {
 
-    EF_INFO("bak_app_start_addr = %x\r\n",bak_app_start_addr);
+//    EF_INFO("bak_app_start_addr = %x\r\n",bak_app_start_addr);
 
     return bak_app_start_addr;
 
